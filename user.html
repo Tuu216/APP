@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>簡易登入系統</title>
+    <style>
+        body {
+            font-family: "Microsoft JhengHei", sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+        input {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        h2 {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        p {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>註冊</h2>
+    <input type="text" id="registerUsername" placeholder="帳號">
+    <input type="password" id="registerPassword" placeholder="密碼">
+    <input type="password" id="confirmPassword" placeholder="再次輸入密碼">
+    <button onclick="register()">註冊</button>
+    <p id="registerResult"></p>
+
+    <h2>登入</h2>
+    <input type="text" id="loginUsername" placeholder="帳號">
+    <input type="password" id="loginPassword" placeholder="密碼">
+    <button onclick="login()">登入</button>
+    <p id="loginResult"></p>
+
+    <script>
+        function register() {
+            const username = document.getElementById("registerUsername").value.trim();
+            const password = document.getElementById("registerPassword").value;
+            const confirm = document.getElementById("confirmPassword").value;
+            const result = document.getElementById("registerResult");
+
+            if (!username || !password || !confirm) {
+                result.innerText = "❌ 所有欄位都必須填寫。";
+                return;
+            }
+
+            if (password !== confirm) {
+                result.innerText = "❌ 兩次密碼不一致，請重新輸入。";
+                return;
+            }
+
+            fetch('http://127.0.0.1:5000/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.text().then(text => {
+                result.innerText = text;
+                result.style.color = response.ok ? "green" : "red";
+            }))
+            .catch(error => {
+                result.innerText = "⚠️ 發生錯誤：" + error;
+                result.style.color = "red";
+            });
+        }
+
+        function login() {
+            const username = document.getElementById("loginUsername").value.trim();
+            const password = document.getElementById("loginPassword").value;
+            const result = document.getElementById("loginResult");
+
+            if (!username || !password) {
+                result.innerText = "❌ 請輸入帳號與密碼。";
+                return;
+            }
+
+            fetch('http://127.0.0.1:5000/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username, password: password })
+            })
+            .then(response => response.text().then(text => {
+                result.innerText = text;
+                result.style.color = response.ok ? "green" : "red";
+            }))
+            .catch(error => {
+                result.innerText = "⚠️ 發生錯誤：" + error;
+                result.style.color = "red";
+            });
+        }
+    </script>
+</body>
+</html>
