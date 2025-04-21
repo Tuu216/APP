@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隨機景點資料</title>
+    <style>
+        .place-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .place-card img {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        .place-card h2 {
+            margin: 0 0 8px;
+        }
+        .place-card p {
+            margin: 4px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>隨機景點資料</h1>
+    <div id="data-container">
+        <!-- 這裡顯示 API 返回的景點資料 -->
+    </div>
+
+    <script>
+        // 使用 Fetch API 獲取資料
+        fetch('http://127.0.0.1:5000/api/data?api_key=apikey123')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('data-container');
+                if (data.error) {
+                    container.innerHTML = `<p style="color: red;">錯誤: ${data.error}</p>`;
+                } else {
+                    // 顯示景點資料
+                    let html = '';
+                    data.forEach(place => {
+                        html += `
+                            <div class="place-card">
+                                <h2>${place.name}</h2>
+                                ${place.photo_url ? `<img src="${place.photo_url}" alt="${place.name}">` : ''}
+                                <p><strong>地址:</strong> ${place.address}</p>
+                                <p><strong>評分:</strong> ${place.rating} (${place.user_ratings_total} 則評論)</p>
+                                <p><strong>電話:</strong> ${place.phone_number}</p>
+                                <p><strong>營業時間:</strong> ${place.opening_hours}</p>
+                                <p><strong>類型:</strong> ${place.types}</p>
+                                <p><strong>價格等級:</strong> ${place.price_level}</p>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                console.error('獲取資料失敗:', error);
+            });
+    </script>
+</body>
+</html>
