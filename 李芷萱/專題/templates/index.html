@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendation</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        h1 {
+            color: #6c757d;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .img-container {
+            text-align: center;  /* 使圖片在容器中居中 */
+            margin-top: 20px;    /* 增加頂部邊距 */
+            margin-bottom: 40px; /* 增加底部邊距 */
+        }
+        .img-fluid {
+            max-width: 100%;     /* 確保圖片不會超過容器的寬度 */
+            height: auto;        /* 自動調整高度 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Welcome to the Movie Recommendation System</h1>
+        <form action="/recommend" method="POST" class="form-inline">
+            <div class="form-group mb-2">
+                <label for="user_id" class="sr-only">User ID:</label>
+                <input type="text" name="user_id" class="form-control" placeholder="Enter User ID" required>
+            </div>
+            <button type="submit" class="btn btn-primary mb-2">Get Recommendations</button>
+        </form>
+
+        {% if recommended_movies is not none and not recommended_movies.empty %}
+        <div class="mt-4">
+            <h2>Recommended Movies for User ID: {{ user_id }}</h2>
+            <ul class="list-group">
+                {% for movie in recommended_movies.itertuples() %}
+                    <li class="list-group-item">{{ movie.title }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        <div class="img-container">
+            <h2>Popular Movies</h2>
+            <img src="{{ url_for('static', filename='popular_movies.png') }}" alt="Popular Movies" class="img-fluid">
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索台灣旅遊</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --indigo: #B599F2;
+            --violet: #2E6FF2;
+            --sky: #072540;
+            --sun-yellow: #0C9AF2;
+            --sunset-orange: #13DCF2;
+            --text-dark: #2E2E2E;
+            --bg-light: #F9F9FF;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        header {
+            background: linear-gradient(90deg, var(--indigo), var(--violet));
+            padding: 1rem 2rem;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav a, nav span {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: var(--sunset-orange);
+        }
+
+        .hero {
+            padding: 4rem 2rem;
+            background: var(--sky);
+            text-align: center;
+            color: #fff;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+        }
+
+        .hero button {
+            background: var(--sun-yellow);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            color: #fff;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .hero button:hover {
+            background: var(--sunset-orange);
+            transform: scale(1.05);
+        }
+
+        .highlights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            background-color: var(--sun-yellow);
+        }
+
+        .card {
+            background: var(--bg-light);
+            border-left: 5px solid var(--sunset-orange);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: var(--violet);
+        }
+
+        footer {
+            background-color: var(--indigo);
+            text-align: center;
+            padding: 1rem;
+            color: #fff;
+        }
+
+        .input-form {
+            max-width: 700px;
+            margin: 2rem auto;
+            display: none;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-form.show {
+            display: flex;
+        }
+
+        .input-form label {
+            font-size: 1.1rem;
+            white-space: nowrap;
+            color: var(--text-dark);
+        }
+
+        .input-form input {
+            font-size: 1.1rem;
+            border-radius: 8px;
+            width: 200px;
+            flex-shrink: 0;
+            border: 1px solid var(--violet);
+        }
+
+        .input-form button {
+            font-size: 1.1rem;
+            border-radius: 8px;
+            background-color: var(--violet);
+            border: none;
+            padding: 8px 20px;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .input-form button:hover {
+            background-color: var(--sunset-orange);
+        }
+
+        .map-responsive {
+            overflow: hidden;
+            padding-bottom: 56.25%;
+            position: relative;
+            height: 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .map-responsive iframe {
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+        }
+
+        .error-message {
+            color: #FF5555;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: var(--violet);
+            color: #fff;
+        }
+
+        .modal-footer button {
+            background-color: var(--violet);
+            border: none;
+        }
+
+        .modal-footer button:hover {
+            background-color: var(--sunset-orange);
+        }
+
+        @media (max-width: 768px) {
+            .hero h2 {
+                font-size: 2rem;
+            }
+
+            .input-form {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .input-form input {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .input-form label,
+            .input-form button {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .input-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .input-form input,
+            .input-form button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>探索台灣旅遊</h1>
+        <nav>
+            <a href="#">首頁</a>
+            <a href="#">熱門景點</a>
+            <a href="#">推薦行程</a>
+            <a href="#">關於我們</a>
+            {% if session.username %}
+                <span>歡迎，{{ session.username }}</span>
+                <a href="{{ url_for('logout') }}">登出</a>
+            {% else %}
+                <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal">登入</a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">註冊</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    {% if not recommendations %}
+        <section class="hero">
+            <h2>為你打造獨一無二的旅程</h2>
+            <p>依你的興趣，推薦最適合你的景點與行程規劃</p>
+            <button id="showFormBtn" class="btn" {% if not session.username %}disabled title="請先登入"{% endif %}><i class="fas fa-map-signs me-2"></i>推薦行程</button>
+        </section>
+
+        <section class="highlights">
+            <div class="card">
+                <h3>山林小旅行</h3>
+                <p>探索台灣的自然秘境，享受清新空氣與壯麗景色。</p>
+            </div>
+            <div class="card">
+                <h3>城市漫遊</h3>
+                <p>走訪人氣文青景點，發掘隱藏的咖啡館與手作市集。</p>
+            </div>
+            <div class="card">
+                <h3>親子同遊</h3>
+                <p>找尋適合全家大小的景點與輕鬆的行程安排。</p>
+            </div>
+        </section>
+    {% endif %}
+
+    <div class="container">
+        {% if not recommendations and session.username %}
+            <form method="POST" class="input-form" id="recommendForm">
+                <label for="user_id">請輸入您的用戶ID：</label>
+                <input type="text" id="user_id" name="user_id" class="form-control" required>
+                <button type="submit" class="btn"><i class="fas fa-search me-2"></i>獲取推薦</button>
+            </form>
+        {% endif %}
+
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        {% if recommendations %}
+            <h4 class="text-success mb-4"><i class="fas fa-star me-2"></i>你的專屬台中行程</h4>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for rec in recommendations %}
+                    <div class="col">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ rec.title }}</h5>
+                                <p class="card-text">
+                                    <i class="fas fa-map-marker-alt text-danger me-2"></i> 地址：{{ rec['地址'] | default('暫無資料') }}<br>
+                                    <i class="fas fa-phone text-danger me-2"></i> 聯絡：{{ rec['聯絡方式'] | default('暫無資料') }}<br>
+                                    <i class="fas fa-star text-warning me-2"></i> 評價：{{ rec['評價'] | default('無評價') }}<br>
+                                    <i class="fas fa-tags text-warning me-2"></i> 標籤：{{ rec.tags | default('無標籤') }}
+                                </p>
+                                <div class="map-responsive">
+                                    <iframe width="100%" height="250" frameborder="0" loading="lazy" allowfullscreen
+                                        src="https://www.google.com/maps?q={{ rec['地址'] | urlencode }}&output=embed"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button id="resetBtn" class="btn btn-primary mt-4"><i class="fas fa-undo me-2"></i>重新推薦</button>
+        {% endif %}
+    </div>
+
+    <!-- 登入模態框 -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">登入</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginUsername" class="form-label">帳號</label>
+                            <input type="text" class="form-control" id="loginUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <div id="loginError" class="text-danger" style="display: none;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="submitLogin()">登入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 註冊模態框 -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">註冊</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerUsername" class="form-label">帳號</label>
+                            <input type="text" class="form-control" id="registerUsername" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div id="registerError" class="text-danger" style="display: none;"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn" onclick="submitRegister()">註冊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 探索台灣旅遊 | 由你出發，精彩不設限</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('showFormBtn')?.addEventListener('click', function() {
+            document.getElementById('recommendForm').classList.add('show');
+            this.style.display = 'none';
+        });
+
+        document.getElementById('resetBtn')?.addEventListener('click', function() {
+            window.location.href = '/';
+        });
+
+        async function submitLogin() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    errorDiv.textContent = result.message;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = '發生錯誤，請稍後再試';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        async function submitRegister() {
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const errorDiv = document.getElementById('registerError');
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    errorDiv.textContent = result.message;
+                    errorDiv.style.display = 'block';
+                }
+            } catch (error) {
+                errorDiv.textContent = '發生錯誤，請稍後再試';
+                errorDiv.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
