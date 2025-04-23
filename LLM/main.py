@@ -1,36 +1,58 @@
-import requests
-from config import TOGETHER_API_KEY, TOGETHER_API_URL, MODEL_NAME, set_model
-from together import Together
+from attraction_recommender import AttractionRecommender
+from itinerary_planner import ItineraryPlanner
+from utils import logger
 
-client = Together() 
-def get_recommendation(query):
-    """向 Together AI API 發送請求，獲取 LLaMA 生成的推薦"""
-    payload = {
-        "model": MODEL_NAME,  # 使用 config.py 設定的模型
-        "prompt": query,
-        "max_tokens": 200,
-        "temperature": 0.7,
-        "top_p": 0.9,
-    }
-
-    headers = {"Authorization": f"Bearer {TOGETHER_API_KEY}", "Content-Type": "application/json"}
-
-    try:
-        response = requests.post(TOGETHER_API_URL, json=payload, headers=headers)
-        response.raise_for_status()
-        result = response.json()
-        return result.get("choices", [{}])[0].get("text", "").strip()
-    except Exception as e:
-        return f"API 錯誤：{str(e)}"
+def main():
+    print("🚀 親子旅遊推薦與規劃系統啟動！輸入 '退出' 以結束。")
+    
+    while True:
+        # 景點推薦階段
+        print("\n=== 景點推薦 ===")
+        recommender = AttractionRecommender()
+        user_query = input("請輸入您的旅遊查詢（例如：台中親子景點）：").strip()
+        if user_query.lower() in ['退出', 'exit', 'quit']:
+            print("感謝使用旅遊推薦與規劃系統！")
+            break
+        if not user_query:
+            print("輸入不能為空，請重新輸入！")
+            continue
+        
+        response = recommender.recommend(user_query)
+        if response.startswith("抱歉"):
+            print(response)
+            continue
+        
+        # 收集反饋
+        if not recommender.get_user_feedback(response):
+            continue
+        
+        # 行程規劃階段
+        while True:
+            choice = input("\n是否需要規劃行程？（是/否/退出）：").strip().lower()
+            if choice == "退出":
+                print("感謝使用旅遊推薦與規劃系統！")
+                return
+            if choice == "否":
+                break  # 返回景點推薦
+            if choice != "是":
+                print("請輸入有效選項：是/否/退出")
+                continue
+            
+            try:
+                days = int(input("請輸入行程天數（1-3 天）：").strip())
+                if days < 1 or days > 3:
+                    print("天數必須在 1-3 天之間！")
+                    continue
+            except ValueError:
+                print("請輸入有效數字！")
+                continue
+            
+            planner = ItineraryPlanner()
+            response = planner.plan_itinerary(days)
+            print("\n### 行程規劃 ###")
+            print(response)
+            print("\n行程已儲存至 itinerary.json")
+            break  # 完成行程規劃後返回景點推薦
 
 if __name__ == "__main__":
-    print("🚀 旅遊推薦系統啟動！")
-
-    # ✅ 可動態切換模型
-    #set_model("llama_3.3_70b")
-
-    # 測試推薦系統
-    user_query = "請推薦台中適合親子的景點，並說明推薦原因。"
-    print("🎯 使用模型：", MODEL_NAME)
-    print("🎯 API：", TOGETHER_API_KEY)
-    print(get_recommendation(user_query))
+    main()
