@@ -1,17 +1,8 @@
 from utils import call_llm, save_to_json, parse_response_to_df, logger
+from LLM_roel import recommender_system
 
 # System Prompt
-system_prompt = """
-你是一位專業的親子旅遊顧問，專為家庭提供旅遊建議。請以繁體中文、友善熱情的語氣回應，並確保回應結構清晰，包含以下內容：
-- 推薦至少 3 個適合親子旅遊的景點。
-- 每個景點提供：
-  - 名稱
-  - 簡短描述（50字以內）
-  - 適合親子的原因（例如設施、安全性、活動類型）
-  - 可選：建議的交通方式（若無法提供，說明原因）
-- 使用條列式格式，簡潔易讀。
-- 根據使用者查詢，確保推薦符合當地特色，避免泛泛而談。
-"""
+system_prompt = recommender_system
 
 class AttractionRecommender:
     def __init__(self, model="meta-llama/Llama-4-Scout-17B-16E-Instruct"):
