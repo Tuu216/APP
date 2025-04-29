@@ -39,10 +39,7 @@ def main():
                 continue
             
             try:
-                days = int(input("請輸入行程天數（1-3 天）：").strip())
-                if days < 1 or days > 3:
-                    print("天數必須在 1-3 天之間！")
-                    continue
+                days = int(input("請輸入行程天數：").strip())
             except ValueError:
                 print("請輸入有效數字！")
                 continue

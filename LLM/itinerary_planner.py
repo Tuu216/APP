@@ -1,7 +1,7 @@
 import json
 from utils import call_llm, load_from_json, save_itinerary, logger
 from datetime import datetime, timedelta
-from LLM_roel import planner_system
+from LLM_system import planner_system
 
 # System Prompt
 system_prompt = planner_system
