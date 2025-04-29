@@ -3,9 +3,30 @@ import json
 import logging
 import pandas as pd
 import requests
-from config import TOGETHER_API_KEY, TOGETHER_API_URL
 from together import Together
 from datetime import datetime
+from dotenv import load_dotenv
+
+# 讀取 .env 檔案
+load_dotenv()
+# 嘗試載入 .env 檔案
+dotenv_loaded = load_dotenv()
+
+# 檢查是否成功載入
+if not dotenv_loaded:
+    print("❌ .env 檔案載入失敗！請確認檔案存在並格式正確。")
+else:
+    print("✅ .env 檔案載入成功！")
+
+# 從 .env 取得 API 金鑰
+TOGETHER_API_KEY =os.getenv("TOGETHER_API_KEY")
+print(TOGETHER_API_KEY)
+# 檢查是否有設定 API 金鑰
+if not TOGETHER_API_KEY:
+    raise ValueError("❌ 未找到 API 金鑰，請在 .env 檔案內設定 TOGETHER_API_KEY")
+
+# API 端點
+TOGETHER_API_URL = "https://api.together.xyz/v1/chat/completions"
 
 # 設定日誌
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -67,8 +88,8 @@ def parse_response_to_df(response):
             current_place = {'名稱': line.replace('- 名稱:', '').strip()}
         elif line.startswith('- 描述:'):
             current_place['描述'] = line.replace('- 描述:', '').strip()
-        elif line.startswith('- 適合親子的原因:'):
-            current_place['適合親子的原因'] = line.replace('- 適合親子的原因:', '').strip()
+        elif line.startswith('- 適合的原因:'):
+            current_place['適合的原因'] = line.replace('- 適合的原因:', '').strip()
         elif line.startswith('- 交通方式:'):
             current_place['交通方式'] = line.replace('- 交通方式:', '').strip()
     if current_place:

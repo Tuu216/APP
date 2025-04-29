@@ -1,27 +1,10 @@
 import json
 from utils import call_llm, load_from_json, save_itinerary, logger
 from datetime import datetime, timedelta
+from LLM_system import planner_system
 
 # System Prompt
-system_prompt = """
-你是一位專業的行程規劃顧問，專為親子家庭設計台中旅遊行程。請以繁體中文、友善熱情的語氣回應，並根據以下規則生成行程：
-- 使用提供的景點資料，安排 1-3 天的行程。
-- 每天行程結構：
-  - 早上：1-2 個景點
-  - 中午：1 間餐廳（提供簡短描述）
-  - 下午：1-2 個景點
-  - 晚餐：1 間餐廳或夜市商圈（提供簡短描述）
-  - 晚餐後：0-1 個景點（例如夜景或輕鬆活動）
-- 輸出格式：
-  第X天 (日期)：
-  (時間) (地點) (簡介)
-  (地點1到地點2交通時間) (交通方式)
-  (時間) (地點) (簡介)
-  ...
-- 交通時間和方式：根據常識估計（例如公車 20 分鐘），若無法估計，說明原因。
-- 若需要餐廳或夜市建議，提供符合親子需求的選項（例如寬敞、兒童友善）。
-- 確保行程合理，考慮親子家庭的體力和興趣。
-"""
+system_prompt = planner_system
 
 class ItineraryPlanner:
     def __init__(self, model="meta-llama/Llama-4-Scout-17B-16E-Instruct"):
